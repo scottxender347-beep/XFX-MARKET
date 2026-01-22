@@ -1,0 +1,49 @@
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// DATABASE
+mongoose.connect("mongodb://127.0.0.1/xfxcapital");
+
+// MODELS
+const User = mongoose.model("User", {
+  email: String,
+  password: String
+});
+
+const Account = mongoose.model("Account", {
+  userId: String,
+  size: Number,
+  phase: String,
+  profit: Number,
+  drawdown: Number,
+  status: String
+});
+
+// AUTH
+app.post("/api/auth/login", async (req, res) => {
+  let user = await User.findOne(req.body);
+  if (!user) {
+    user = await User.create(req.body);
+  }
+  res.json({ user });
+});
+
+// CHALLENGES
+app.post("/api/challenges/create", async (req, res) => {
+  const account = await Account.create(req.body);
+  res.json(account);
+});
+
+app.get("/api/challenges/:userId", async (req, res) => {
+  const accounts = await Account.find({ userId: req.params.userId });
+  res.json(accounts);
+});
+
+app.listen(5000, () =>
+  console.log("XFX Capital backend running on port 5000")
+);
