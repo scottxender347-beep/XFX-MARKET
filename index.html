@@ -3,161 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <title>XFX Capital | Prop Firm</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0b0f1a;
-  color: #fff;
-}
-header {
-  background: #060914;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-}
-header a {
-  color: #00e5ff;
-  margin-left: 15px;
-  text-decoration: none;
-}
-section {
-  padding: 60px 20px;
-  max-width: 1100px;
-  margin: auto;
-}
-.card {
-  background: #11162a;
-  padding: 25px;
-  border-radius: 8px;
-  margin-top: 20px;
-}
-button {
-  background: #00e5ff;
-  border: none;
-  padding: 12px 25px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-}
-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-}
-.hidden { display: none; }
-footer {
-  background: #060914;
-  padding: 20px;
-  text-align: center;
-  opacity: 0.7;
-}
+:root{
+--bg:#0B0F1A;--card:#11162A;--accent:#00E5FF;--text:#FFF;--muted:#A0A4B8}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:var(--bg);color:var(--text)}
+header{background:#060914;padding:20px;display:flex;justify-content:space-between;position:sticky;top:0}
+header a{color:var(--accent);margin-left:15px;text-decoration:none}
+section{padding:70px 20px;max-width:1200px;margin:auto}
+.hero h1{font-size:3rem}
+.btn{background:var(--accent);color:#000;padding:12px 25px;border-radius:6px;display:inline-block;margin-top:15px}
+.card{background:var(--card);padding:25px;border-radius:10px;margin-top:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.banner{background:#00E5FF;color:#000;padding:12px;text-align:center;font-weight:bold}
+input,button{width:100%;padding:10px;margin-top:10px}
+footer{background:#060914;padding:25px;text-align:center;color:var(--muted)}
+.price-old{text-decoration:line-through;color:#888}
+.price-new{font-size:1.5rem;font-weight:bold}
+.hidden{display:none}
 </style>
 </head>
 
 <body>
 
+<div class="banner" id="discount"></div>
+
 <header>
-  <h2>XFX Capital</h2>
-  <div>
-    <a href="#pricing">Challenges</a>
-    <a href="#login">Login</a>
-  </div>
+<h2>XFX Capital</h2>
+<nav>
+<a href="#pricing">Challenges</a>
+<a href="#login">Login</a>
+<a href="#affiliate">Affiliate</a>
+<a href="#investors">Investors</a>
+<a href="#legal">Legal</a>
+</nav>
 </header>
 
-<section>
-  <h1>Trade Structure. Earn Capital.</h1>
-  <p>
-    XFX Capital funds disciplined traders using the XOZ Framework.
-    No gambling. No hype. Just structure.
-  </p>
-  <button onclick="showSection('pricing')">Start Challenge</button>
+<section class="hero">
+<h1>Trade Structure. Earn Capital.</h1>
+<p>XOZ-powered proprietary trading firm focused on discipline and risk control.</p>
+<a class="btn" href="#pricing">Start Challenge</a>
 </section>
 
-<section id="pricing" class="hidden">
-  <h2>Challenge Pricing</h2>
+<section id="pricing">
+<h2>Challenge Pricing</h2>
+<div class="grid">
 
-  <div class="card">
-    <h3>$10,000 Account</h3>
-    <p>Price: $69</p>
-    <p>Profit Target: 8%</p>
-    <button onclick="buyChallenge(10000)">Buy Challenge</button>
-  </div>
-
-  <div class="card">
-    <h3>$50,000 Account</h3>
-    <p>Price: $249</p>
-    <p>Profit Target: 8%</p>
-    <button onclick="buyChallenge(50000)">Buy Challenge</button>
-  </div>
-</section>
-
-<section id="login" class="hidden">
-  <h2>Trader Login</h2>
-  <input id="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-</section>
-
-<section id="dashboard" class="hidden">
-  <h2>Trader Dashboard</h2>
-  <pre id="accounts"></pre>
-</section>
-
-<footer>
-  Simulated trading only. Educational purposes. No real funds provided.
-</footer>
-
-<script>
-const API = "http://localhost:5000/api";
-
-function showSection(id) {
-  document.querySelectorAll("section").forEach(s => s.classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
+<div class="card">
+<h3>$10,000 Account</h3>
+<p class="price-old">$69</p>
+<p class="price-new">$55</p>
+function pay(method, amount){
+    } else if(method === 'crypto'){
+        window.location.href = "https://commerce.coinbase.com/checkout/0xb193f5fBb004d85fA6EE192C92f3E6cF08D27d7F"; 
+    } else if(method === 'mobile'){
+        window.location.href = "https://flutterwave.com/pay/675255985"; 
+    }
 }
+</div>
 
-function buyChallenge(size) {
-  fetch(API + "/challenges/create", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      userId: localStorage.getItem("userId"),
-      size: size,
-      phase: "Evaluation",
-      profit: 0,
-      drawdown: 0,
-      status: "Active"
-    })
-  }).then(() => alert("Challenge Created"));
-}
-
-function login() {
-  fetch(API + "/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    localStorage.setItem("userId", data.user._id);
-    loadDashboard();
-  });
-}
-
-function loadDashboard() {
-  showSection("dashboard");
-  fetch(API + "/challenges/" + localStorage.getItem("userId"))
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("accounts").textContent =
-        JSON.stringify(data, null, 2);
-    });
-}
-</script>
-
-</body>
-</html>
+<div class="card">
+<h3>$50,000 Account</h3>
+<p class="price-old">$249</p>
+<p class="price-new">$199</p>
