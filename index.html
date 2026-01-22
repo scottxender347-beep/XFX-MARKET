@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>XFX Capital | Prop Firm</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b0f1a;
+  color: #fff;
+}
+header {
+  background: #060914;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+header a {
+  color: #00e5ff;
+  margin-left: 15px;
+  text-decoration: none;
+}
+section {
+  padding: 60px 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+.card {
+  background: #11162a;
+  padding: 25px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+button {
+  background: #00e5ff;
+  border: none;
+  padding: 12px 25px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+}
+.hidden { display: none; }
+footer {
+  background: #060914;
+  padding: 20px;
+  text-align: center;
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>XFX Capital</h2>
+  <div>
+    <a href="#pricing">Challenges</a>
+    <a href="#login">Login</a>
+  </div>
+</header>
+
+<section>
+  <h1>Trade Structure. Earn Capital.</h1>
+  <p>
+    XFX Capital funds disciplined traders using the XOZ Framework.
+    No gambling. No hype. Just structure.
+  </p>
+  <button onclick="showSection('pricing')">Start Challenge</button>
+</section>
+
+<section id="pricing" class="hidden">
+  <h2>Challenge Pricing</h2>
+
+  <div class="card">
+    <h3>$10,000 Account</h3>
+    <p>Price: $69</p>
+    <p>Profit Target: 8%</p>
+    <button onclick="buyChallenge(10000)">Buy Challenge</button>
+  </div>
+
+  <div class="card">
+    <h3>$50,000 Account</h3>
+    <p>Price: $249</p>
+    <p>Profit Target: 8%</p>
+    <button onclick="buyChallenge(50000)">Buy Challenge</button>
+  </div>
+</section>
+
+<section id="login" class="hidden">
+  <h2>Trader Login</h2>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</section>
+
+<section id="dashboard" class="hidden">
+  <h2>Trader Dashboard</h2>
+  <pre id="accounts"></pre>
+</section>
+
+<footer>
+  Simulated trading only. Educational purposes. No real funds provided.
+</footer>
+
+<script>
+const API = "http://localhost:5000/api";
+
+function showSection(id) {
+  document.querySelectorAll("section").forEach(s => s.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function buyChallenge(size) {
+  fetch(API + "/challenges/create", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: localStorage.getItem("userId"),
+      size: size,
+      phase: "Evaluation",
+      profit: 0,
+      drawdown: 0,
+      status: "Active"
+    })
+  }).then(() => alert("Challenge Created"));
+}
+
+function login() {
+  fetch(API + "/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    localStorage.setItem("userId", data.user._id);
+    loadDashboard();
+  });
+}
+
+function loadDashboard() {
+  showSection("dashboard");
+  fetch(API + "/challenges/" + localStorage.getItem("userId"))
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("accounts").textContent =
+        JSON.stringify(data, null, 2);
+    });
+}
+</script>
+
+</body>
+</html>
